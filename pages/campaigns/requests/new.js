@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
 import Layout from '../../../components/Layout';
 import { Form, Input, Message, Button } from 'semantic-ui-react';
+import { Link, Router } from '../../../routes'
 import web3 from '../../../ethereum/web3';
 import Contract from '../../../ethereum/campaign'; 
 class RequestNew extends Component {
+
+    static async getInitialProps(props) {
+        return { 
+            address: props.query.address
+        }
+    }
     state = {
         description: '',
         amount: '',
         recipient: '',
         loading: '',
-        errorMessage: ''
+        errorMessage: '',
     };
 
     onSubmit = async event => {
@@ -17,7 +24,6 @@ class RequestNew extends Component {
         this.setState({ loading: true, errorMessage: '' });
         const campaign = Contract(this.props.address);
         try {
-            console.log(this.state.amount)
             let accounts = await web3.eth.getAccounts();
             await campaign.methods
                 .createRequest(
@@ -28,7 +34,7 @@ class RequestNew extends Component {
                 .send({
                     from: accounts[0]
                 });
-
+            Router.pushRoute(`/campaigns/${this.props.address}/requests`);
         } catch(err) {
             console.log(err)
             this.setState({ errorMessage: err.message })
@@ -39,6 +45,7 @@ class RequestNew extends Component {
     render() {
         return (
             <Layout>
+
                 <h3>Create a new request</h3>
                 <Form onSubmit={this.onSubmit} error={ this.state.errorMessage !== '' }>
                 <Form.Field>
@@ -70,7 +77,12 @@ class RequestNew extends Component {
                     </Form.Field>
 
                     <Message error header='Oops!' content={this.state.errorMessage} />
+                    {/* <Message success header='Great!' content='Successfully created request' /> */}
                     <Button primary loading={this.state.loading} >Create</Button>
+                    
+                    <Link route={`/campaigns/${this.props.address}/requests`}>
+                        <a><Button>Back</Button></a>
+                    </Link>
                 </Form>
             </Layout>
         )
