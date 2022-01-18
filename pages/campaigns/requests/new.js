@@ -75,6 +75,7 @@ class RequestNew extends Component {
                             onChange={event => this.setState({ recipient: event.target.value})}
                         />
                     </Form.Field>
+                    <p>Remeber: Only campaign managers can create requests</p>
 
                     <Message error header='Oops!' content={this.state.errorMessage} />
                     {/* <Message success header='Great!' content='Successfully created request' /> */}
