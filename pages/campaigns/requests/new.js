@@ -15,7 +15,7 @@ class RequestNew extends Component {
         description: '',
         amount: '',
         recipient: '',
-        loading: '',
+        loading: false,
         errorMessage: '',
     };
 

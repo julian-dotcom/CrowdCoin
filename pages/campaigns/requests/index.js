@@ -10,6 +10,7 @@ class RequestIndex extends Component {
         const address = props.query.address;
         const campaign = Campaign(address);
         const requestCount = await campaign.methods.getRequestsCount().call(); 
+        
         const requests = await Promise.all(
             Array(parseInt(requestCount)).fill().map((el, index) => {
                 console.log(index);
@@ -37,12 +38,15 @@ class RequestIndex extends Component {
         const { Header, Row, HeaderCell, Body } = Table;
         return (
             <Layout>
-                <h3>Request</h3>
+                <h3>Requests</h3>
                 <Link route={`/campaigns/${this.props.address}/requests/new`}>
                     <a>
                         <Button primary>Add request</Button>
                     </a>
                 </Link>
+                <Link route={`/campaigns/${this.props.address}`}>
+                        <a><Button>Back</Button></a>
+                    </Link>
                 <Table>
                     <Header>
                         <Row>
@@ -59,6 +63,8 @@ class RequestIndex extends Component {
                         {this.renderRows()}
                     </Body>
                 </Table>
+                <br />
+                <p>Remeber: Only campaign managers can finalize requests and only contributors can approve requests!</p>
             </Layout>
         );
     }

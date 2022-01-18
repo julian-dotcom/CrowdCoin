@@ -3,7 +3,7 @@ import CampaignFactory from './build/CampaignFactory.json';
 
 const instance = new web3.eth.Contract(
   JSON.parse(CampaignFactory.interface),
-  '0xC6Ef2D86D84f643Fc2925CfD99F4097C462bDB40'
+  '0x10998ED2529396854b3812c58Fc7D83d0EaDB0E2'
 );
 
 export default instance;

@@ -41,7 +41,7 @@ contract Campaign {
 
     function contribute() public payable {
         require(msg.value > minimumContribution);
-
+        // require(!approvers[msg.sender]);
         approvers[msg.sender] = true;
         approversCount++;
     }
@@ -94,7 +94,8 @@ contract Campaign {
         return requests.length;
     }
 
-    function isApprover(uint index) public view returns (bool) {
+
+    function hasApproved(uint index) public view returns (bool) {
         return requests[index].approvals[msg.sender];
     }
 }

@@ -13,7 +13,6 @@ let campaign;
 
 beforeEach(async () => {
     accounts = await web3.eth.getAccounts();
-
     factory = await new web3.eth.Contract(JSON.parse(compiledFactory.interface))
         .deploy({ data: compiledFactory.bytecode })
         .send({ from: accounts[0], gas: '1000000' });
@@ -62,10 +61,18 @@ describe('Campaigns', () => {
 
     it('Processes request', async () => {
         await campaign.methods.contribute().send({ from: accounts[0], value: web3.utils.toWei('10', 'ether') });
+        await campaign.methods.contribute().send({ from: accounts[1], value: web3.utils.toWei('10', 'ether') });
 
         await campaign.methods.createRequest('Buy batteries', web3.utils.toWei('5', 'ether'), accounts[3]).send({ from: accounts[0], gas: '1000000' });
+        
+        let hasApproved = await campaign.methods.isApprover(0).call();
+        assert(!hasApproved);
 
         await campaign.methods.approveRequest(0).send({ from: accounts[0], gas: '1000000'});
+        await campaign.methods.approveRequest(0).send({ from: accounts[1], gas: '1000000'});
+
+        hasApproved = await campaign.methods.isApprover(0).call();
+        assert(hasApproved);
 
         await campaign.methods.finalizeRequest(0).send({ from: accounts[0], gas: '1000000'});
 
